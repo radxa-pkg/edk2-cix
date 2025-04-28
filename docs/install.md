@@ -1,4 +1,4 @@
-# Install released binary
+# Manually install released binary
 
 ## Full demo
 

@@ -2,4 +2,5 @@
 
 - [Build](build.md)
 - [Debug](debug.md)
-- [Install released binary](install.md)
+- [Update BIOS from RadxaOS](update.md)
+- [Manually install released binary](install.md)
