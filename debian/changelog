@@ -1,11 +1,23 @@
-edk2-cix (0.2.2-1) UNRELEASED; urgency=medium
+edk2-cix (0.3.0-1) main; urgency=medium
 
   [ ZHANG Yuntian ]
   * fix: adjust line ending for patch to apply
   * chore: update edk2-non-osi
   * fix: add example variable configuration for gbp dch
+  * chore: update to the latest SDK release
+  * docs: update product name
+  * feat: support custom memory frequency
+  * fix: restore configurations from template update
+  * chore: bump EDK2 release to 2025.03
+  * fix: rename installation script to startup.nsh
+  * feat: add help message for EFI Shell power management
+  * chore: update devenv.lock
+  * feat: install EDK2 installer to ESP
+  * chore: update devenv.lock
+  * chore: update edk2-platforms
+  * docs: add new systemd-boot update method
 
- -- "Radxa Computer Co., Ltd" <dev@radxa.com>  Fri, 17 Jan 2025 08:38:43 +0000
+ -- "Radxa Computer Co., Ltd" <dev@radxa.com>  Mon, 28 Apr 2025 11:28:21 +0800
 
 edk2-cix (0.2.1-1) main; urgency=medium
 
