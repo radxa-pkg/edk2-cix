@@ -6,7 +6,11 @@ a given image to ship its own matching BIOS.
 
 ## How to start BIOS update?
 
-TBD
+Restart the system, and choose `Install EDK2` option for your product.
+
+Below is the complete process of upgrading BIOS from 0.2.2-1 to 0.3.0-1:
+
+[![asciicast](https://asciinema.org/a/9uKAUpFuZu2ggUhOXaw4Rf2S2.svg)](https://asciinema.org/a/9uKAUpFuZu2ggUhOXaw4Rf2S2)
 
 ## Install a different version of BIOS
 

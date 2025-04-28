@@ -116,6 +116,10 @@ You can run BIOS flash script from UEFI Shell now. It uses Windows convention, s
 fs0:\radxa\orion-o6\startup.nsh
 ```
 
+```admonish info
+Before 0.3.0-1, `startup.nsh` is called `setup.nsh`.
+```
+
 The first backslash is not mandatory:
 
 ```cmd
