@@ -1,3 +1,9 @@
+edk2-cix (0.3.1-1) main; urgency=medium
+
+  * fix: backport Rayson 64G memory config
+
+ -- ZHANG Yuntian <yt@radxa.com>  Mon, 09 Jun 2025 10:46:48 +0000
+
 edk2-cix (0.3.0-1) main; urgency=medium
 
   [ ZHANG Yuntian ]
