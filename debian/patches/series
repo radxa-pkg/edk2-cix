@@ -8,3 +8,7 @@
 # Radxa vendor patches
 # EDK2:
 edk2/use_debian_iasl.patch
+
+# Backport fixes
+# CRLF ending files are excluded as they were damaged when updateing the patch
+0001-Platform-O6-add-initial-Rayson-64G-support.patch

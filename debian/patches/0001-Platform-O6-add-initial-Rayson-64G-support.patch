@@ -1,0 +1,203 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ZHANG Yuntian <yt@radxa.com>
+Date: Mon, 9 Jun 2025 07:03:53 +0000
+Subject: [PATCH] Platform/O6: add initial Rayson 64G support
+
+Signed-off-by: ZHANG Yuntian <yt@radxa.com>
+Change-Id: I2f0befe8ecbf887bff47526f7b2b35c15c53797b
+---
+ .../Radxa/Orion/O6/mem_config/.gitignore      |  1 +
+ .../Orion/O6/mem_config/MemConfigBinLayout.h  |  7 +++++
+ .../Orion/O6/mem_config/RS600/GlobalConfig.c  | 14 ++++++++++
+ .../O6/mem_config/RS600/MemLpddr5BusCfg_x8.c  | 14 ++++++++++
+ .../O6/mem_config/RS600/MemPhyPadCfg_x8.c     | 13 +++++++++
+ .../Orion/O6/mem_config/default/BoardIdMap.c  | 28 ++++++++++---------
+ .../Orion/O6/mem_config/include/BoardConfig.h | 26 +++++++++--------
+ .../Drivers/SystemInfoDxe/SystemInfoDxe.c     |  5 +++-
+ 8 files changed, 82 insertions(+), 26 deletions(-)
+
+diff --git a/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/MemConfigBinLayout.h b/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/MemConfigBinLayout.h
+index 0769bfc0..deb4478e 100644
+--- a/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/MemConfigBinLayout.h
++++ b/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/MemConfigBinLayout.h
+@@ -20,10 +20,14 @@ extern MEM_CONFIG_BLOCK_CONFIG      GlobalConfigBlock_16G;
+ extern MEM_CONFIG_BLOCK_CONFIG      GlobalConfigBlock_32G;
+ extern MEM_CONFIG_BLOCK_CONFIG      GlobalConfigBlock_64G;
+ extern MEM_CONFIG_BLOCK_CONFIG      GlobalConfigBlock_32G_Lo;
++extern MEM_CONFIG_BLOCK_CONFIG      GlobalConfigBlock_64G_Rayson;
+ 
+ extern MEM_CONFIG_BUSCFG_LP5        MemLpddr5BusCfg_rs600_x8;
+ extern MEM_CONFIG_PHYPADCFG         MemPhyPadCfg_rs600_x8;
+ 
++extern MEM_CONFIG_BUSCFG_LP5        MemLpddr5BusCfg_rs600_rayson;
++extern MEM_CONFIG_PHYPADCFG         MemPhyPadCfg_rs600_rayson;
++
+ #define CDCB_BLOCK_LIST \
+   /* default */ \
+   CDCB_BLOCK(MemBiosSetup), \
+@@ -42,7 +46,10 @@ extern MEM_CONFIG_PHYPADCFG         MemPhyPadCfg_rs600_x8;
+   CDCB_BLOCK(GlobalConfigBlock_32G), \
+   CDCB_BLOCK(GlobalConfigBlock_64G), \
+   CDCB_BLOCK(GlobalConfigBlock_32G_Lo), \
++  CDCB_BLOCK(GlobalConfigBlock_64G_Rayson), \
+   CDCB_BLOCK(MemLpddr5BusCfg_rs600_x8), \
+   CDCB_BLOCK(MemPhyPadCfg_rs600_x8), \
++  CDCB_BLOCK(MemLpddr5BusCfg_rs600_rayson), \
++  CDCB_BLOCK(MemPhyPadCfg_rs600_rayson), \
+ 
+ #endif
+diff --git a/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/RS600/GlobalConfig.c b/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/RS600/GlobalConfig.c
+index 508ae109..2add551e 100644
+--- a/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/RS600/GlobalConfig.c
++++ b/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/RS600/GlobalConfig.c
+@@ -85,3 +85,17 @@ MEM_CONFIG_BLOCK_CONFIG  GlobalConfigBlock_64G = {
+   .DeviceWidth      = 8,
+   .RankNum          = 2,
+ };
++
++MEM_CONFIG_BLOCK_CONFIG  GlobalConfigBlock_64G_Rayson = {
++  {
++    .Signature      = MEM_CONFIG_BLOCK_CONFIG_SIGNAUTE,
++    .BlockSize      = sizeof(MEM_CONFIG_BLOCK_CONFIG),
++    .BoardMask      = RS600_64G_RAYSON_MASK
++  },
++  .MaxFreq          = DDR5500_FREQUENCY,
++  .ChMask           = 0xF,
++  .DdrType          = DDR_TYPE_LPDDR5,
++  .DeviceDensity    = 16,
++  .DeviceWidth      = 8,
++  .RankNum          = 2,
++};
+diff --git a/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/RS600/MemLpddr5BusCfg_x8.c b/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/RS600/MemLpddr5BusCfg_x8.c
+index 53d2616f..0eb3211d 100644
+--- a/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/RS600/MemLpddr5BusCfg_x8.c
++++ b/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/RS600/MemLpddr5BusCfg_x8.c
+@@ -17,3 +17,17 @@ MEM_CONFIG_BUSCFG_LP5 MemLpddr5BusCfg_rs600_x8 = {
+     {DDR6400_FREQUENCY, RANK_DR,  0x10,    RTT_240, RTT_240, RTT_120, RTT_120, RTT_40,  RTT_OFF,  RTT_40,  340, 280},
+   }
+ };
++
++MEM_CONFIG_BUSCFG_LP5 MemLpddr5BusCfg_rs600_rayson = {
++  {
++    .Signature      = MEM_CONFIG_BLOCK_BUSCFG_LP5_SIGNATURE,
++    .BlockSize      = sizeof(MEM_CONFIG_BUSCFG_LP5) + sizeof(MEM_CONFIG_BUSCFG_LP5_ENTRY) * ENTRY_COUNT,
++    .BoardMask      = RS600_64G_RAYSON_MASK
++  },
++  {
++    //                                                                                                     Dq   Ca
++    //MaxMemFreq        RankPerCh CA_ODT   CK_ODT   CS_ODT   DQ_ODT   WCK_ODT  SOC_ODT  NTDQ_ODT ODT_PDDS Vref Vref(% of VDDQ)
++    {DDR6400_FREQUENCY, RANK_SR,  RTT_240, RTT_120, RTT_240, RTT_80,  RTT_80,  RTT_40,  RTT_OFF,  RTT_40,  340, 280},
++    {DDR6400_FREQUENCY, RANK_DR,  0x10,    RTT_240, RTT_240, RTT_120, RTT_120, RTT_40,  RTT_OFF,  RTT_40,  340, 280},
++  }
++};
+diff --git a/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/RS600/MemPhyPadCfg_x8.c b/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/RS600/MemPhyPadCfg_x8.c
+index 08773374..64f930e9 100644
+--- a/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/RS600/MemPhyPadCfg_x8.c
++++ b/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/RS600/MemPhyPadCfg_x8.c
+@@ -43,3 +43,16 @@ MEM_CONFIG_PHYPADCFG MemPhyPadCfg_rs600_x8 = {
+     {DDR6400_FREQUENCY, RANK_ALL, IMP_34, IMP_40, IMP_34, IMP_40, IMP_40, IMP_40, IMP_34, IMP_40, IMP_34, IMP_40,  IMP_34, 0,  0, 0x1b},
+   }
+ };
++
++MEM_CONFIG_PHYPADCFG MemPhyPadCfg_rs600_rayson = {
++  {
++    .Signature      = MEM_CONFIG_BLOCK_PHYPADCFG_SIGNATURE,
++    .BlockSize      = sizeof(MEM_CONFIG_PHYPADCFG) + sizeof(MEM_CONFIG_PHYPADCFG_ENTRY) * ENTRY_COUNT,
++    .BoardMask      = RS600_64G_RAYSON_MASK
++  },
++  {
++    // MaxMemFreq       RankPerCh DqDrv   DqOdt   DqsDrv  DqsOdt  CkDrv   CaDrv   CsDrv   CkeDrv  FdbkDrv FdbkOdt  RstDrv FFE DFE CTLE
++    {DDR5500_FREQUENCY, RANK_ALL, IMP_34, IMP_40, IMP_34, IMP_40, IMP_40, IMP_40, IMP_34, IMP_40, IMP_34, IMP_40,  IMP_34, 0,  0, 0x0},
++    {DDR6400_FREQUENCY, RANK_ALL, IMP_34, IMP_40, IMP_34, IMP_40, IMP_40, IMP_40, IMP_34, IMP_40, IMP_34, IMP_40,  IMP_34, 0,  0, 0x1b},
++  }
++};
+diff --git a/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/default/BoardIdMap.c b/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/default/BoardIdMap.c
+index cdc02c03..3ac5b83e 100644
+--- a/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/default/BoardIdMap.c
++++ b/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/default/BoardIdMap.c
+@@ -2,18 +2,19 @@
+ #include "BoardConfig.h"
+ #include "MemConfigurationTable.h"
+ 
+-#define ENTRY_COUNT 6
++#define ENTRY_COUNT 7
+ 
+ // PCBID[6][2:0]
+ #define RS600  4
+ 
+ // PCBID[7][5:3]
+-#define DRAM_4G_SR_315     0
+-#define DRAM_2G_SR_315     2
+-#define DRAM_3G_SR_315     5
+-#define DRAM_8G_DR_315_LO  8
+-#define DRAM_16G_DR_x8_315 10
+-#define DRAM_8G_DR_315     11
++#define DRAM_4G_SR_315      0
++#define DRAM_2G_SR_315      2
++#define DRAM_3G_SR_315      5
++#define DRAM_8G_DR_315_LO   8
++#define DRAM_16G_DR_x8_315  10
++#define DRAM_8G_DR_315      11
++#define DRAM_16G_RAYSON_315 12
+ 
+ //               PCBID[2:0]    PCBID[5:3]         PCBID[6]           PCBID[7]
+ #define PCB(b,d) (((b) & 7) + (((d) & 7) << 3) + (((b) & 8) << 3) + (((d) & 8) << 4))
+@@ -25,11 +26,12 @@ MEM_CONFIG_BLOCK_BOARDID_MAP BoardIdMapBlock = {
+     .BoardMask      = BOARD_ID_MASK_DEFAULT
+   },
+   {
+-    {PCB(RS600, DRAM_2G_SR_315    ), RS600_8G_ID    },
+-    {PCB(RS600, DRAM_3G_SR_315    ), RS600_12G_ID   },
+-    {PCB(RS600, DRAM_4G_SR_315    ), RS600_16G_ID   },
+-    {PCB(RS600, DRAM_8G_DR_315    ), RS600_32G_ID   },
+-    {PCB(RS600, DRAM_8G_DR_315_LO ), RS600_32G_LO_ID},
+-    {PCB(RS600, DRAM_16G_DR_x8_315), RS600_64G_x8_ID},
++    {PCB(RS600, DRAM_2G_SR_315     ), RS600_8G_ID    },
++    {PCB(RS600, DRAM_3G_SR_315     ), RS600_12G_ID   },
++    {PCB(RS600, DRAM_4G_SR_315     ), RS600_16G_ID   },
++    {PCB(RS600, DRAM_8G_DR_315     ), RS600_32G_ID   },
++    {PCB(RS600, DRAM_8G_DR_315_LO  ), RS600_32G_LO_ID},
++    {PCB(RS600, DRAM_16G_DR_x8_315 ), RS600_64G_x8_ID},
++    {PCB(RS600, DRAM_16G_RAYSON_315), RS600_64G_RAYSON_ID},
+   }
+ };
+diff --git a/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/include/BoardConfig.h b/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/include/BoardConfig.h
+index fe251411..db5792d3 100644
+--- a/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/include/BoardConfig.h
++++ b/src/edk2-platforms/Platform/Radxa/Orion/O6/mem_config/include/BoardConfig.h
+@@ -1,18 +1,20 @@
+ #ifndef _BOARD_CONFIG_H_
+ #define _BOARD_CONFIG_H_
+ 
+-#define RS600_8G_ID     0
+-#define RS600_12G_ID    1
+-#define RS600_16G_ID    2
+-#define RS600_32G_ID    4
+-#define RS600_64G_x8_ID 6
+-#define RS600_32G_LO_ID 7
++#define RS600_8G_ID         0
++#define RS600_12G_ID        1
++#define RS600_16G_ID        2
++#define RS600_32G_ID        4
++#define RS600_64G_x8_ID     6
++#define RS600_32G_LO_ID     7
++#define RS600_64G_RAYSON_ID 8
+ 
+-#define RS600_8G_MASK     BOARD_ID_MASK(RS600_8G_ID)
+-#define RS600_12G_MASK    BOARD_ID_MASK(RS600_12G_ID)
+-#define RS600_16G_MASK    BOARD_ID_MASK(RS600_16G_ID)
+-#define RS600_32G_MASK    BOARD_ID_MASK(RS600_32G_ID)
+-#define RS600_32G_LO_MASK BOARD_ID_MASK(RS600_32G_LO_ID)
+-#define RS600_64G_x8_MASK BOARD_ID_MASK(RS600_64G_x8_ID)
++#define RS600_8G_MASK           BOARD_ID_MASK(RS600_8G_ID)
++#define RS600_12G_MASK          BOARD_ID_MASK(RS600_12G_ID)
++#define RS600_16G_MASK          BOARD_ID_MASK(RS600_16G_ID)
++#define RS600_32G_MASK          BOARD_ID_MASK(RS600_32G_ID)
++#define RS600_32G_LO_MASK       BOARD_ID_MASK(RS600_32G_LO_ID)
++#define RS600_64G_x8_MASK       BOARD_ID_MASK(RS600_64G_x8_ID)
++#define RS600_64G_RAYSON_MASK   BOARD_ID_MASK(RS600_64G_RAYSON_ID)
+ 
+ #endif
+-- 
+2.49.0
+
