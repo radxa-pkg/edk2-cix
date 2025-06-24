@@ -66,5 +66,23 @@
         ${lib.getExe' pkgs.coreutils "echo"} "Please run startup.nsh from UEFI Shell, listed under Boot Manager menu, to install new EDK2 binary."
       '';
     };
+    cix-push = {
+      description = "Create PR for a given CIX branch";
+      exec = ''
+        set -euo pipefail
+        ${lib.getExe pkgs.git} push "''${1%%/*}" "HEAD:refs/for/''${1#*/}%r=UEFI"
+      '';
+    };
+    install-gerrit = {
+      description = "Install Gerrit commig-msg hook";
+      exec = ''
+        set -euo pipefail
+        GIT_DIR="../../.git/modules/src/$(basename $PWD)"
+        [[ -d "$GIT_DIR" ]]
+        mkdir -p "$GIT_DIR/hooks"
+        ${lib.getExe pkgs.curl} -Lo "$GIT_DIR/hooks/commit-msg" https://git.cixtech.com/tools/hooks/commit-msg
+        chmod +x "$GIT_DIR/hooks/commit-msg"
+      '';
+    };
   };
 }
