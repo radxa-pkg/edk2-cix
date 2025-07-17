@@ -1,13 +1,18 @@
-include .github/local/Makefile.local
+-include .github/local/Makefile.local
+-include Makefile.extra
 
+PROJECT ?= edk2-cix
+CUSTOM_DEBUILD_ENV ?= DEB_BUILD_OPTIONS='parallel=1'
+
+.DEFAULT_GOAL := all
 .PHONY: all
 all: build
 
 .PHONY: devcontainer_setup
 devcontainer_setup:
+	sudo dpkg --add-architecture arm64
 	sudo apt-get update
 	sudo apt-get build-dep . -y
-	curl -L https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf.tar.xz | sudo tar -xJC /opt
 
 #
 # Test
@@ -19,16 +24,18 @@ test:
 # Build
 #
 .PHONY: build
-build: build-doc
+build: pre_build main_build post_build
 
-SRC-DOC		:=	debian
-DOCS		:=	$(SRC-DOC)/SOURCE
-.PHONY: build-doc
-build-doc: $(DOCS)
+.PHONY: pre_build
+pre_build:
+	# Fix file permissions when created from template
+	chmod +x debian/rules
 
-.PHONY: $(SRC-DOC)/SOURCE
-$(SRC-DOC)/SOURCE: $(SRC-DOC)
-	echo -e "git clone $(shell git remote get-url origin)\ngit checkout $(shell git rev-parse HEAD)" > "$@"
+.PHONY: main_build
+main_build:
+
+.PHONY: post_build
+post_build:
 
 #
 # Documentation
@@ -63,29 +70,25 @@ translate:
 distclean: clean
 
 .PHONY: clean
-clean: clean-doc clean-deb
-
-.PHONY: clean-doc
-clean-doc:
-	rm -rf $(DOCS)
+clean: clean-deb
 
 .PHONY: clean-deb
 clean-deb:
-	rm -rf debian/.debhelper debian/${PROJECT}*/ debian/debhelper-build-stamp debian/files debian/*.debhelper.log debian/*.postrm.debhelper debian/*.substvars
+	rm -rf debian/.debhelper debian/$(PROJECT)*/ debian/tmp/ debian/debhelper-build-stamp debian/files debian/*.debhelper.log debian/*.*.debhelper debian/*.substvars
 
 #
 # Release
 #
 .PHONY: dch
 dch: debian/changelog
-	EDITOR=true gbp dch --ignore-branch --multimaint-merge --commit --git-log='--no-merges --perl-regexp --author ^((?!github-actions\[bot\]).*)$$' --release --dch-opt=--upstream
+	gbp dch --ignore-branch --multimaint-merge --release --spawn-editor=never \
+	--git-log='--no-merges --perl-regexp --invert-grep --grep=^(chore:\stemplates\sgenerated)' \
+	--dch-opt=--upstream --commit --commit-msg="feat: release %(version)s"
 
 .PHONY: deb
 deb: debian
-	dos2unix -n src/edk2/BaseTools/Conf/tools_def.template src/edk2/BaseTools/Conf/tools_def.template
-	debuild --no-lintian --lintian-hook "lintian --fail-on error,warning --suppress-tags bad-distribution-in-changes-file -- %p_%v_*.changes" --no-sign -b
-	unix2dos -n src/edk2/BaseTools/Conf/tools_def.template src/edk2/BaseTools/Conf/tools_def.template
+	$(CUSTOM_DEBUILD_ENV) debuild --no-lintian --lintian-hook "lintian --fail-on error,warning --suppress-tags-from-file $(PWD)/debian/common-lintian-overrides -- %p_%v_*.changes" --no-sign -b -aarm64 -Pcross
 
 .PHONY: release
 release:
-	gh workflow run .github/workflows/new_version.yml --ref $(shell git branch --show-current)
+	gh workflow run .github/workflows/new_version.yaml --ref $(shell git branch --show-current)

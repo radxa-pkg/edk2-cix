@@ -10,34 +10,38 @@ jobs:
         fetch-depth: 0
         fetch-tags: true
         submodules: "recursive"
-    - name: "Enable Multiarch"
-      uses: "RadxaYuntian/action-apt@master"
+    - name: "Set up QEMU Emulation"
+      uses: "docker/setup-qemu-action@v3"
       with:
-        arch: "arm64"
+        image: "tonistiigi/binfmt:latest"
     - name: "Test"
-      run: |
-        sudo apt-get update
-        sudo apt-get install --no-install-recommends -y git-buildpackage
-        export DEBEMAIL="dev@radxa.com"
-        export DEBFULLNAME='"Radxa Computer Co., Ltd"'
-        git config user.name "github-actions[bot]"
-        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git branch -m GITHUB_RUNNER || true
-        git branch -D main || true
-        git switch -c main || true
-        make dch
-        make devcontainer_setup
-        make test deb
-        git reset --hard HEAD~1
-      shell: "bash"
+      uses: "devcontainers/ci@v0.3"
+      with:
+        push: "never"
+        runCmd: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y git-buildpackage
+          export DEBEMAIL="dev@radxa.com"
+          export DEBFULLNAME='"Radxa Computer Co., Ltd"'
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git branch -m GITHUB_RUNNER || true
+          git branch -D main || true
+          git switch -c main || true
+          make dch
+          make test deb
+          git reset --hard HEAD~1
+          rm ../*.deb
     - name: "Build"
-      run: |
-        make deb
-      shell: "bash"
+      uses: "devcontainers/ci@v0.3"
+      with:
+        push: "never"
+        runCmd: |
+          make deb
     - id: "artifacts_path"
       name: "Workaround actions/upload-artifact#176"
       run: |
-        echo "artifacts_path=$(realpath ..)" >> "$GITHUB_OUTPUT"
+        echo "artifacts_path=$(realpath ..)" | tee -a "$GITHUB_OUTPUT"
       shell: "bash"
     - name: "Upload artifacts"
       uses: "actions/upload-artifact@v4"
@@ -52,10 +56,10 @@ jobs:
         version="${version//\~/.}"
         if [[ -n "$(git tag -l "$version")" ]]
         then
-            echo "distro=UNRELEASED" >> "$GITHUB_OUTPUT"
+            echo "distro=UNRELEASED"
         else
-            echo "distro=$(dpkg-parsechangelog -S Distribution)" >> "$GITHUB_OUTPUT"
-        fi
+            echo "distro=$(dpkg-parsechangelog -S Distribution)"
+        fi | tee -a "$GITHUB_OUTPUT"
       shell: "bash"
   release:
     if: "${{ github.event_name != 'pull_request' && needs.build.outputs.distro != 'UNRELEASED' }}"
@@ -75,16 +79,18 @@ jobs:
       run: |
         version="$(dpkg-parsechangelog -S Version)"
         version="${version//\~/.}"
-        echo "version=$version" >> $GITHUB_ENV
-        echo "changes<<EOF" >> $GITHUB_ENV
-        echo '```' >> $GITHUB_ENV
-        echo "$(dpkg-parsechangelog -S Changes)" >> $GITHUB_ENV
-        echo '```' >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
-        echo "$version" > VERSION
+        {
+            echo "version=$version"
+            echo "changes<<EOF"
+            echo '```'
+            echo "$(dpkg-parsechangelog -S Changes)"
+            echo '```'
+            echo "EOF"
+        } | tee -a "$GITHUB_ENV"
+        echo "$version" | tee VERSION
         if [[ -f pkg.conf.template ]]
         then
-            sed "s/VERSION/$version/g" pkg.conf.template > pkg.conf
+            sed "s/VERSION/$version/g" pkg.conf.template | tee pkg.conf
         fi
       shell: "bash"
     - name: "Release"
@@ -110,7 +116,7 @@ jobs:
           ${{ env.changes }}
         tag_name: "${{ env.version }}"
     - name: "Update Test repos"
-      uses: "radxa-repo/update-repo-action@main"
+      uses: "RadxaOS-SDK/rsdk/.github/actions/infra-repo-update@main"
       with:
         test-repo: true
         token: "${{ secrets.RADXA_APT_TEST_REPO_TOKEN }}"

@@ -2,8 +2,6 @@
 
 [![Release](https://github.com/radxa-pkg/edk2-cix/actions/workflows/release.yaml/badge.svg)](https://github.com/radxa-pkg/edk2-cix/actions/workflows/release.yaml)
 
-Radxa edk2 image for cix release
-
 ## Build
 
 For the time being the build system must run on a x86_64 host due to use of CIX specific tools available in binary form, only.
