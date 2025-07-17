@@ -1,3 +1,19 @@
+edk2-cix (1.0.0-1) main; urgency=medium
+
+  [ ZHANG Yuntian ]
+  * docs: add upgrade recording for boot entry method
+  * fix: add power cycle warning before flashing
+  * chore: bump to CIX 2025.04 release
+  * fix: solve dos2unix permission issue in docker
+  * feat: add more development helpers
+  * chore: update submodules for Radxa changes
+  * fix: various build issues
+
+  [ Michal Schulz ]
+  * Update README.md to mention x86_64 host requirement
+
+ -- "Radxa Computer Co., Ltd" <dev@radxa.com>  Thu, 17 Jul 2025 09:09:53 +0000
+
 edk2-cix (0.3.0-1) main; urgency=medium
 
   [ ZHANG Yuntian ]
