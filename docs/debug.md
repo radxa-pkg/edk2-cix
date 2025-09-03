@@ -14,11 +14,17 @@ UART2 is the default management console for EDK2 and the operationg system.
 
 UART3 is only available when EDK2 is build as DEBUG image.
 
-All UARTs other than UART1 use 115200 baud. EC UART can be viewed with the following command:
+All UARTs use 115200 baud.
+
+````admonish info
+
+If you use version 1.0.0-1 or earlier, EC UART can be viewed with the following command:
 
 ```bash
 picocom -b 460800 --imap lfcrlf /dev/ttyX
 ```
+
+````
 
 In general, the log output order after power is connected is as follow:
 
