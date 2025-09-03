@@ -1,10 +1,5 @@
 PROJECT ?= edk2-cix
 
-devcontainer_setup: /opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/10.2-2020.11-x86_64-aarch64-none-elf-manifest.txt
-
-/opt/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/10.2-2020.11-x86_64-aarch64-none-elf-manifest.txt:
-	curl -L https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf.tar.xz | sudo tar -xJC /opt
-
 build: build-edk2
 
 .PHONY: build-edk2

@@ -6,7 +6,6 @@ Standards-Version: 4.6.0
 Build-Depends: debhelper (>=12~),
                devscripts,
                lintian,
-               git-buildpackage,
                dh-exec,
                dos2unix,
                pandoc,
@@ -17,6 +16,7 @@ Build-Depends: debhelper (>=12~),
                bison,
                flex,
                curl,
+               crossbuild-essential-arm64 [!arm64],
 
 Package: edk2-cix
 Architecture: all
