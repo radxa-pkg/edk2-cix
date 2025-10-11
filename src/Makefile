@@ -101,10 +101,11 @@ Build/%/$(UEFI_TARGET)_GCC5/Firmwares/dummy.bin:
 	if [[ -d "$$FW" ]]; then \
 		echo "Found custom firmware."; \
 		cp -r "$$FW/." Build/$*/$(UEFI_TARGET)_GCC5/Firmwares/; \
-		if [[ ! -f "$$FW/ec_fw.bin" ]]; then \
-			ln -sf dummy.bin Build/$*/$(UEFI_TARGET)_GCC5/Firmwares/ec_fw.bin; \
-		fi; \
-	fi
+	fi; \
+	if [[ ! -e "$$FW" ]] || [[ ! -f "$$FW/ec_fw.bin" ]]; then \
+		echo "Found EC-less platform."; \
+		ln -sf dummy.bin Build/$*/$(UEFI_TARGET)_GCC5/Firmwares/ec_fw.bin; \
+	fi; \
 
 .ONESHELL:
 SHELL := bash
