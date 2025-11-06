@@ -9,30 +9,20 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
     - name: "Checkout"
-      uses: "actions/checkout@v4"
+      uses: "actions/checkout@v5"
       with:
         fetch-depth: 0
-    - name: "Setup mdBook"
-      uses: "peaceiris/actions-mdbook@v2"
+    - name: "Install Nix"
+      uses: "cachix/install-nix-action@v31"
+    - name: "Use cachix"
+      uses: "cachix/cachix-action@v16"
       with:
-        mdbook-version: "latest"
-    - name: "Install mdbook plugins"
-      run: |
-        plugins=(
-            mdbook-admonish
-            mdbook-linkcheck
-            mdbook-i18n-helpers
-            mdbook-toc
-            mdbook-cmdrun
-        )
-        for i in "${plugins[@]}"
-        do
-            cargo install "$i"
-        done
-      shell: "bash"
+        name: "devenv"
+    - name: "Install devenv.sh"
+      run: "nix profile install nixpkgs#devenv"
     - name: "Build"
       run: |
-        mdbook build
+        devenv shell mdbook build
         for po_lang in zh-CN
         do
             POT_CREATION_DATE=$(grep --max-count 1 '^"POT-Creation-Date:' po/$po_lang.po | sed -E 's/".*: (.*)\\n"/\1/')
@@ -48,7 +38,7 @@ jobs:
             MDBOOK_BOOK__LANGUAGE=$po_lang \
             MDBOOK_OUTPUT__HTML__SITE_URL=/edk2-cix/$po_lang/ \
             MDBOOK_OUTPUT__HTML__REDIRECT='{}' \
-            mdbook build -d book/$po_lang
+            devenv shell mdbook build -d book/$po_lang
             mv book/$po_lang/html book/html/$po_lang
             echo "::endgroup::"
         done
@@ -56,7 +46,7 @@ jobs:
     - name: "Setup Pages"
       uses: "actions/configure-pages@v5"
     - name: "Upload artifact"
-      uses: "actions/upload-pages-artifact@v3"
+      uses: "actions/upload-pages-artifact@v4"
       with:
         path: "./book/html"
     - if: "github.event_name != 'pull_request'"

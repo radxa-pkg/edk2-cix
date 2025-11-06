@@ -5,7 +5,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
     - name: "Checkout"
-      uses: "actions/checkout@v4"
+      uses: "actions/checkout@v5"
       with:
         fetch-depth: 0
         submodules: "recursive"
@@ -32,6 +32,7 @@ jobs:
       with:
         push: "never"
         runCmd: |
+          set -euo pipefail
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y git-buildpackage
           export DEBEMAIL="dev@radxa.com"

@@ -8,6 +8,7 @@
         "mkhl.direnv",
         "github.vscode-github-actions",
         "grafana.vscode-jsonnet",
+        "ms-vscode.cpptools-extension-pack",
         "ms-vscode.makefile-tools",
         "vivaxy.vscode-conventional-commits"
       ]
@@ -18,6 +19,7 @@
     "ghcr.io/devcontainers/features/nix:1": {
       "version": "latest",
       "packages": "cachix,direnv,devenv",
+      "useAttributePath": true,
       "extraNixConfig": [
         "experimental-features = nix-command flakes",
         // Uncomment below to speed up container building in China
