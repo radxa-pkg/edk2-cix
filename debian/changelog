@@ -1,3 +1,21 @@
+edk2-cix (1.0.0-2) main; urgency=medium
+
+  [ ZHANG Yuntian ]
+  * feat: allow board firmware to override default firmware
+  * fix: clean before making mem_config
+  * feat: update EC UART Baud
+  * feat: support aarch64 native build
+  * fix: handle firmware-less EC-less platform
+  * docs: add update submodule instruction
+  * fix: clarify that external code are subject to their own licenses
+  * feat: add Orion O6N
+  * chore: remove acpica
+
+  [ github-actions[bot] ]
+  * chore: update submodules
+
+ -- "Radxa Computer Co., Ltd" <dev@radxa.com>  Thu, 06 Nov 2025 09:30:53 +0000
+
 edk2-cix (1.0.0-1) main; urgency=medium
 
   [ ZHANG Yuntian ]
