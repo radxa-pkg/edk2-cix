@@ -7,6 +7,3 @@
 [submodule "src/edk2-platforms"]
 	path = src/edk2-platforms
 	url = https://github.com/radxa/edk2-platforms.git
-[submodule "src/tools/acpica"]
-	path = src/tools/acpica
-	url = https://github.com/acpica/acpica.git
