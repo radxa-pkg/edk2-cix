@@ -1,3 +1,10 @@
+edk2-cix (1.0.0-3) main; urgency=medium
+
+  [ github-actions[bot] ]
+  * chore: update submodules
+
+ -- "Radxa Computer Co., Ltd" <dev@radxa.com>  Tue, 11 Nov 2025 04:08:58 +0000
+
 edk2-cix (1.0.0-2) main; urgency=medium
 
   [ ZHANG Yuntian ]
