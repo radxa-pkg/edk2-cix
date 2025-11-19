@@ -3,15 +3,38 @@ set -e
 
 case $1 in
     configure)
-        rm -rf /boot/efi/edk2-cix /boot/efi/loader/entries/edk2-cix_*.conf
-        cp -r /usr/share/edk2 /boot/efi/edk2-cix
+        rm -rf /boot/efi/edk2 /boot/efi/loader/entries/edk2-*
+
+        cp -r /usr/share/edk2 /boot/efi/edk2
+        for i in /boot/efi/edk2/radxa/*/Shell.efi; do
+            cp "$i" /boot/efi/edk2/radxa/Shell.efi
+            break
+        done
+        if [ ! -f /boot/efi/edk2/radxa/Shell.efi ]; then
+            echo "Failed to find suitable Shell.efi." >&2
+            exit 1
+        fi
+
         version="$(dpkg -s "$DPKG_MAINTSCRIPT_PACKAGE" | sed -n 's/^Version: //p')"
-        for i in /boot/efi/edk2-cix/radxa/*; do
+
+        cat << EOF > /boot/efi/loader/entries/edk2-shell.conf
+title           Update BIOS to $version
+version         $version
+efi             /edk2/radxa/Shell.efi
+architecture    aa64
+EOF
+
+        for i in /boot/efi/edk2/radxa/*; do
+            if [ ! -d "$i" ]; then
+                continue
+            fi
             product=$(basename "$i")
             sed -i "s/set product ./set product \" for $product.\"/" "$i/startup.nsh"
-            cat << EOF > /boot/efi/loader/entries/edk2-cix_$product.conf
-title Install EDK2 $version for $product
-efi /edk2-cix/radxa/$product/Shell.efi
+            cat << EOF > /boot/efi/loader/entries/edk2-$product.conf.disabled
+title           Install EDK2 $version for $product
+version         $version
+efi             /edk2/radxa/$product/Shell.efi
+architecture    aa64
 EOF
         done
         ;;

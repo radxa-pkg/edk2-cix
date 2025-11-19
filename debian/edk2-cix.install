@@ -1,14 +1,6 @@
-#src/Build/Merak/*_GCC5/cix_flash*.bin /usr/share/edk2/cix/merak/
-#src/Build/Merak/*_GCC5/BuildOptions /usr/share/edk2/cix/merak/
-#src/Build/Merak/*_GCC5/AARCH64/Shell.efi /usr/share/edk2/cix/merak/
-#src/edk2-non-osi/Platform/CIX/Sky1/FlashTool/* /usr/share/edk2/cix/merak/
-#src/scripts/* /usr/share/edk2/cix/merak/
+#!/usr/bin/dh-exec
 
-#src/Build/Edge/*_GCC5/cix_flash*.bin /usr/share/edk2/cix/edge/
-#src/Build/Edge/*_GCC5/BuildOptions /usr/share/edk2/cix/edge/
-#src/Build/Edge/*_GCC5/AARCH64/Shell.efi /usr/share/edk2/cix/edge/
-#src/edk2-non-osi/Platform/CIX/Sky1/FlashTool/* /usr/share/edk2/cix/edge/
-#src/scripts/* /usr/share/edk2/cix/edge/
+src/scripts/welcome.nsh => /usr/share/edk2/radxa/startup.nsh
 
 src/Build/O6/*_GCC5/cix_flash*.bin /usr/share/edk2/radxa/orion-o6/
 src/Build/O6/*_GCC5/BuildOptions /usr/share/edk2/radxa/orion-o6/
@@ -16,7 +8,7 @@ src/Build/O6/*_GCC5/AARCH64/EnrollFromDefaultKeysApp.efi /usr/share/edk2/radxa/o
 src/Build/O6/*_GCC5/AARCH64/VariableInfo.efi /usr/share/edk2/radxa/orion-o6/
 src/Build/O6/*_GCC5/AARCH64/Shell.efi /usr/share/edk2/radxa/orion-o6/
 src/edk2-non-osi/Platform/CIX/Sky1/FlashTool/* /usr/share/edk2/radxa/orion-o6/
-src/scripts/* /usr/share/edk2/radxa/orion-o6/
+src/scripts/startup.nsh /usr/share/edk2/radxa/orion-o6/
 
 src/Build/O6N/*_GCC5/cix_flash*.bin /usr/share/edk2/radxa/orion-o6n/
 src/Build/O6N/*_GCC5/BuildOptions /usr/share/edk2/radxa/orion-o6n/
@@ -24,4 +16,4 @@ src/Build/O6N/*_GCC5/AARCH64/EnrollFromDefaultKeysApp.efi /usr/share/edk2/radxa/
 src/Build/O6N/*_GCC5/AARCH64/VariableInfo.efi /usr/share/edk2/radxa/orion-o6n/
 src/Build/O6N/*_GCC5/AARCH64/Shell.efi /usr/share/edk2/radxa/orion-o6n/
 src/edk2-non-osi/Platform/CIX/Sky1/FlashTool/* /usr/share/edk2/radxa/orion-o6n/
-src/scripts/* /usr/share/edk2/radxa/orion-o6n/
+src/scripts/startup.nsh /usr/share/edk2/radxa/orion-o6n/
