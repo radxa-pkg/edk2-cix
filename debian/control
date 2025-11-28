@@ -34,3 +34,12 @@ Depends: edk2-cix,
          ${misc:Depends}
 Description: Radxa EDK II meta-package for Orion O6
  This is the meta-package for EDK II.
+
+Package: edk2-radxa-orion-cix-p1
+Architecture: all
+Section: admin
+Priority: standard
+Depends: edk2-cix,
+         ${misc:Depends}
+Description: Radxa EDK II meta-package for generic CIX P1 image
+ This is the meta-package for EDK II.
