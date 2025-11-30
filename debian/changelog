@@ -1,3 +1,14 @@
+edk2-cix (1.0.0-6) main; urgency=medium
+
+  [ ZHANG Yuntian ]
+  * fix: make BIOS update less easy
+  * feat: add edk2-radxa-orion-cix-p1
+
+  [ github-actions[bot] ]
+  * chore: update submodules
+
+ -- "Radxa Computer Co., Ltd" <dev@radxa.com>  Sun, 30 Nov 2025 12:20:43 +0000
+
 edk2-cix (1.0.0-5) main; urgency=medium
 
   [ github-actions[bot] ]
