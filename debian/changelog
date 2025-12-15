@@ -1,3 +1,13 @@
+edk2-cix (1.0.0-7) main; urgency=medium
+
+  [ ZHANG Yuntian ]
+  * fix: pad full BIOS image to 8M
+
+  [ github-actions[bot] ]
+  * chore: update submodules
+
+ -- "Radxa Computer Co., Ltd" <dev@radxa.com>  Mon, 15 Dec 2025 09:47:02 +0000
+
 edk2-cix (1.0.0-6) main; urgency=medium
 
   [ ZHANG Yuntian ]
