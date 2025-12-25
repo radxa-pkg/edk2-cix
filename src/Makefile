@@ -116,7 +116,7 @@ SHELL := bash
 Build/%/$(UEFI_TARGET)_GCC5/FV/SKY1_BL33_UEFI.fd:
 	make -C edk2/BaseTools -j$(shell nproc) Source/C
 	export WORKSPACE="$(shell pwd)"
-	export PACKAGES_PATH="$$WORKSPACE/edk2:$$WORKSPACE/edk2-platforms:$$WORKSPACE/edk2-non-osi"
+	export PACKAGES_PATH="$$WORKSPACE/edk2:$$WORKSPACE/edk2-platforms:$$WORKSPACE/edk2-non-osi:$$WORKSPACE/edk2-platforms/Silicon/Intel/"
 	export GCC5_AARCH64_PREFIX="$(GCC5_AARCH64_PREFIX)"
 	if [[ -f tools/acpica/generate/unix/bin/iasl ]]; then
 		export IASL_PREFIX="$$WORKSPACE/tools/acpica/generate/unix/bin/"
