@@ -1,0 +1,8 @@
+{
+  "*": {
+    "Releases": [
+      "cd8180-bookworm",
+      "cd8180-bookworm-test"
+    ]
+  }
+}
