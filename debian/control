@@ -17,6 +17,7 @@ Build-Depends: debhelper (>=12~),
                flex,
                curl,
                crossbuild-essential-arm64 [!arm64],
+               python-is-python3,
 
 Package: edk2-cix
 Architecture: all
