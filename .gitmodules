@@ -1,9 +1,12 @@
 [submodule "src/edk2"]
 	path = src/edk2
 	url = https://github.com/radxa/edk2.git
+	branch = cix_p1_dev
 [submodule "src/edk2-non-osi"]
 	path = src/edk2-non-osi
 	url = https://github.com/radxa/edk2-non-osi.git
+	branch = cix_p1_dev
 [submodule "src/edk2-platforms"]
 	path = src/edk2-platforms
 	url = https://github.com/radxa/edk2-platforms.git
+	branch = cix_p1_dev_2025q4

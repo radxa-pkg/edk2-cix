@@ -1,3 +1,12 @@
+edk2-cix (1.2.0-1) UNRELEASED; urgency=medium
+
+  [ ZHANG Yuntian ]
+  * fix: limit package release to related SoC repo
+  * fix: CIX 25Q4 SDK calls python
+  * chore: update to CIX 25Q4 SDK
+
+ -- "Radxa Computer Co., Ltd" <dev@radxa.com>  Thu, 05 Mar 2026 11:36:15 +0000
+
 edk2-cix (1.1.0-2) main; urgency=medium
 
   [ github-actions[bot] ]
