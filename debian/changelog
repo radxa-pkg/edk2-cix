@@ -1,3 +1,10 @@
+edk2-cix (1.2.1) UNRELEASED; urgency=medium
+
+  [ ZHANG Yuntian ]
+  * fix: switch back to native Debian format
+
+ -- "Radxa Computer Co., Ltd" <dev@radxa.com>  Wed, 18 Mar 2026 08:42:40 +0000
+
 edk2-cix (1.2.0-1) main; urgency=medium
 
   [ ZHANG Yuntian ]
