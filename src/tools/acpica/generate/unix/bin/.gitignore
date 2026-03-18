@@ -1,0 +1,8 @@
+# When using CIX provided build_and_package.sh, it will check the existence of
+# this folder. This .gitignore file is used to satisfy such requirement.
+
+# The build script will additionally call iasl under this folder.
+# You can run `ln -s $(which iasl) iasl` to make it work.
+
+*
+!.gitignore

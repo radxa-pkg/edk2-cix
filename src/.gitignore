@@ -3,3 +3,4 @@
 /tools/gcc
 /cix_flash.bin
 /patches*
+/build_and_package.sh

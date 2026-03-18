@@ -7,12 +7,16 @@ all: build
 
 UNAME := $(shell uname -m)
 
+# The first GCC5_AARCH64_PREFIX value uses distro-supplied cross compiler
+# The second GCC5_AARCH64_PREFIX value uses CIX-verified cross compiler
 ifeq ($(UNAME), aarch64)
 PACKAGE_TOOL_ARCH := AARCH64
 GCC5_AARCH64_PREFIX :=
+# GCC5_AARCH64_PREFIX := $(shell pwd)/tools/gcc/gcc-arm-10.2-2020.11-aarch64-aarch64-none-elf/bin/aarch64-none-elf-gcc
 else
 PACKAGE_TOOL_ARCH := X86_64
 GCC5_AARCH64_PREFIX := aarch64-linux-gnu-
+# GCC5_AARCH64_PREFIX := $(shell pwd)/tools/gcc/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
 endif
 
 PACKAGE_TOOL := edk2-non-osi/Platform/CIX/Sky1/PackageTool
