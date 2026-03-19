@@ -84,8 +84,11 @@ Build/%/$(UEFI_TARGET)_GCC5/cix_flash_all.bin: Build/%/$(UEFI_TARGET)_GCC5/Firmw
 	head -c 8M < /dev/zero | tr '\000' '\377' > "Build/$*/$(UEFI_TARGET)_GCC5/cix_flash_all.bin"
 	dd if="Build/$*/$(UEFI_TARGET)_GCC5/cix_flash_all.raw" of="Build/$*/$(UEFI_TARGET)_GCC5/cix_flash_all.bin" conv=notrunc
 
-Build/%/$(UEFI_TARGET)_GCC5/Firmwares/bootloader3.img: Build/%/$(UEFI_TARGET)_GCC5/FV/SKY1_BL33_UEFI.fd Build/%/$(UEFI_TARGET)_GCC5/Firmwares/dummy.bin
-	cp -aR $(PACKAGE_TOOL)/Keys/ $(PACKAGE_TOOL)/certs/ Build/$*/$(UEFI_TARGET)_GCC5/
+Build/%/$(UEFI_TARGET)_GCC5/Firmwares/bootloader3.img: \
+	Build/%/$(UEFI_TARGET)_GCC5/FV/SKY1_BL33_UEFI.fd \
+	Build/%/$(UEFI_TARGET)_GCC5/Firmwares/dummy.bin \
+	Build/%/$(UEFI_TARGET)_GCC5/certs/trusted_key_no.crt
+
 	export PATH_PACKAGE_TOOL="$(shell realpath "$(PACKAGE_TOOL)")" && \
 	"$$PATH_PACKAGE_TOOL/$(PACKAGE_TOOL_ARCH)/cert_uefi_create_rsa" --key-alg rsa --key-size 3072 --hash-alg sha256 -p --ntfw-nvctr 223 \
 		--nt-fw-cert Build/$*/$(UEFI_TARGET)_GCC5/certs/nt_fw_cert.crt \
@@ -113,7 +116,16 @@ Build/%/$(UEFI_TARGET)_GCC5/Firmwares/dummy.bin:
 	if [[ ! -e "$$FW" ]] || [[ ! -f "$$FW/ec_fw.bin" ]]; then \
 		echo "Found EC-less platform."; \
 		ln -sf dummy.bin Build/$*/$(UEFI_TARGET)_GCC5/Firmwares/ec_fw.bin; \
-	fi; \
+	fi
+
+Build/%/$(UEFI_TARGET)_GCC5/certs/trusted_key_no.crt:
+	cp -aR $(PACKAGE_TOOL)/Keys/ $(PACKAGE_TOOL)/certs/ Build/$*/$(UEFI_TARGET)_GCC5/
+	if [[ -f "$$PATH_PACKAGE_TOOL/$(PACKAGE_TOOL_ARCH)/cix_regen_trusted_key_cert" ]]; then \
+    	"$$PATH_PACKAGE_TOOL/$(PACKAGE_TOOL_ARCH)/cix_regen_trusted_key_cert" \
+			-p Build/$*/$(UEFI_TARGET)_GCC5/Keys/oem_publickey.pem \
+			-s Build/$*/$(UEFI_TARGET)_GCC5/Keys/oem_privatekey.pem \
+			-o $@; \
+	fi
 
 .ONESHELL:
 SHELL := bash
