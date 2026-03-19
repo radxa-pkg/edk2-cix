@@ -78,11 +78,11 @@ Build/%/$(UEFI_TARGET)_GCC5/cix_flash_all.bin: Build/%/$(UEFI_TARGET)_GCC5/Firmw
 	export PATH_PACKAGE_TOOL="$(shell realpath "$(PACKAGE_TOOL)")" && \
 	pushd "Build/$*/$(UEFI_TARGET)_GCC5/" && \
 	"$$PATH_PACKAGE_TOOL/$(PACKAGE_TOOL_ARCH)/cix_package_tool" -c "./spi_flash_config_all.json" -o "./cix_flash_all.raw" && \
+	popd
 
 	# \377 = 0xFF
-	head -c 8M < /dev/zero | tr '\000' '\377' > "./cix_flash_all.bin"
-	dd if="./cix_flash_all.raw" of="./cix_flash_all.bin" conv=notrunc
-	popd
+	head -c 8M < /dev/zero | tr '\000' '\377' > "Build/$*/$(UEFI_TARGET)_GCC5/cix_flash_all.bin"
+	dd if="Build/$*/$(UEFI_TARGET)_GCC5/cix_flash_all.raw" of="Build/$*/$(UEFI_TARGET)_GCC5/cix_flash_all.bin" conv=notrunc
 
 Build/%/$(UEFI_TARGET)_GCC5/Firmwares/bootloader3.img: Build/%/$(UEFI_TARGET)_GCC5/FV/SKY1_BL33_UEFI.fd Build/%/$(UEFI_TARGET)_GCC5/Firmwares/dummy.bin
 	cp -aR $(PACKAGE_TOOL)/Keys/ $(PACKAGE_TOOL)/certs/ Build/$*/$(UEFI_TARGET)_GCC5/
