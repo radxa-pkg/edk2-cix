@@ -5,6 +5,9 @@ UEFI_TARGET ?= RELEASE
 .PHONY: all
 all: build
 
+.SHELLFLAGS := -ec
+.ONESHELL:
+SHELL := bash
 UNAME := $(shell uname -m)
 
 # The first GCC5_AARCH64_PREFIX value uses distro-supplied cross compiler
@@ -127,8 +130,6 @@ Build/%/$(UEFI_TARGET)_GCC5/certs/trusted_key_no.crt:
 			-o $@; \
 	fi
 
-.ONESHELL:
-SHELL := bash
 Build/%/$(UEFI_TARGET)_GCC5/FV/SKY1_BL33_UEFI.fd:
 	make -C edk2/BaseTools -j$(shell nproc) Source/C
 	export WORKSPACE="$(shell pwd)"
