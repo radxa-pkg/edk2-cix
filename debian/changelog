@@ -1,9 +1,17 @@
-edk2-cix (1.2.1) UNRELEASED; urgency=medium
+edk2-cix (1.2.1) main; urgency=medium
 
   [ ZHANG Yuntian ]
   * fix: switch back to native Debian format
+  * feat: improve support for CIX build process
+  * fix: match pushd with popd
+  * feat: support self-generated cert
+  * fix: fail build if a command returns non-zero
+  * fix: delete existing firmware before building custom firmware
 
- -- "Radxa Computer Co., Ltd" <dev@radxa.com>  Wed, 18 Mar 2026 08:42:40 +0000
+  [ github-actions[bot] ]
+  * chore: update submodules
+
+ -- "Radxa Computer Co., Ltd" <dev@radxa.com>  Thu, 19 Mar 2026 10:26:52 +0000
 
 edk2-cix (1.2.0-1) main; urgency=medium
 
