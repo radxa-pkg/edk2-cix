@@ -15,7 +15,7 @@ jobs:
     - name: "Install Nix"
       uses: "cachix/install-nix-action@v31"
     - name: "Use cachix"
-      uses: "cachix/cachix-action@v16"
+      uses: "cachix/cachix-action@v17"
       with:
         name: "devenv"
     - name: "Install devenv.sh"
@@ -44,14 +44,15 @@ jobs:
         done
       shell: "bash"
     - name: "Setup Pages"
-      uses: "actions/configure-pages@v5"
+      uses: "actions/configure-pages@v6"
     - name: "Upload artifact"
-      uses: "actions/upload-pages-artifact@v4"
+      uses: "actions/upload-pages-artifact@v5"
       with:
         path: "./book/html"
     - if: "github.event_name != 'pull_request'"
       name: "Deploy to GitHub Pages"
-      uses: "actions/deploy-pages@v4"
+      uses: "actions/deploy-pages@v5"
+    timeout-minutes: 30
 name: "Deploy documentation"
 "on":
   merge_group: {}
