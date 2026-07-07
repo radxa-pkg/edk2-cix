@@ -17,7 +17,7 @@ PACKAGE_TOOL_ARCH := AARCH64
 GCC5_AARCH64_PREFIX :=
 # GCC5_AARCH64_PREFIX := $(shell pwd)/tools/gcc/gcc-arm-10.2-2020.11-aarch64-aarch64-none-elf/bin/aarch64-none-elf-gcc
 else
-PACKAGE_TOOL_ARCH := X86_64
+PACKAGE_TOOL_ARCH := .
 GCC5_AARCH64_PREFIX := aarch64-linux-gnu-
 # GCC5_AARCH64_PREFIX := $(shell pwd)/tools/gcc/gcc-arm-10.2-2020.11-x86_64-aarch64-none-elf/bin/aarch64-none-elf-
 endif
