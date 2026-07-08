@@ -1,9 +1,9 @@
-edk2-cix (1.3.0) UNRELEASED; urgency=medium
+edk2-cix (1.3.0) main; urgency=medium
 
   [ ZHANG Yuntian ]
   * chore: update to 26Q2
 
- -- "Radxa Computer Co., Ltd" <dev@radxa.com>  Wed, 08 Jul 2026 07:25:50 +0000
+ -- "Radxa Computer Co., Ltd" <dev@radxa.com>  Wed, 08 Jul 2026 08:23:06 +0000
 
 edk2-cix (1.2.4) main; urgency=medium
 
