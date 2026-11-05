@@ -23,7 +23,7 @@ GCC5_AARCH64_PREFIX := aarch64-linux-gnu-
 endif
 
 PACKAGE_TOOL := edk2-non-osi/Platform/CIX/Sky1/PackageTool
-DSC := edk2-platforms/Platform/Radxa/Orion/O6N/O6N.dsc
+DSC := $(shell find edk2-platforms/Platform/Radxa -mindepth 3 -maxdepth 3 -name "*.dsc" -type "f") \
 	#    $(shell find edk2-platforms/Platform/CIX -mindepth 3 -maxdepth 3 -name "*.dsc" -type "f")
 
 CIX_FLASH := $(foreach i, $(patsubst edk2-platforms/Platform/%.dsc,%,$(DSC)), Build/$(lastword $(subst /, ,$(i)))/$(UEFI_TARGET)_GCC5/cix_flash_all.bin) \
